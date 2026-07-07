@@ -2,13 +2,18 @@
 
 An automated build and install script for the [obs-aitum-multistream](https://github.com/Aitum/obs-aitum-multistream) plugin on Linux.
 
-NOTE: Currently, this is only intended for Arch Linux. If you would like to make this work for Debian/Fedora/etc., feel free to send a pull request.
+> [!IMPORTANT]
+> Currently, this is only intended for Arch Linux. If you would like to make this work for Debian/Fedora/etc., feel free to send a pull request.
+
+> [!CAUTION]
+> These scripts were 100% vibe-coded. I got them to the point where they work well enough for me. Use at your own risk.
 
 ## Quick Install
 
 Select one of the following installation variants depending on your preference:
 
 ### 1. Latest Stable Release (Recommended)
+
 This will clone the repository and build the latest tagged stable release:
 
 ```bash
@@ -16,12 +21,12 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/anthonymendez/linux-inst
 ```
 
 ### 2. Development Variant (Latest Commit)
+
 This will clone the repository and build the latest commit from the `main` branch:
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/anthonymendez/linux-install-obs-aitum-multistream/main/install-dev.sh)"
 ```
-
 
 ---
 
