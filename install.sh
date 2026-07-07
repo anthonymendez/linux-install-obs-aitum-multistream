@@ -7,6 +7,10 @@ set -euo pipefail
 # Capture initial workspace path
 WORKSPACE="$(pwd)"
 
+# Release type configuration (stable or dev)
+RELEASE_TYPE="${RELEASE_TYPE:-stable}"
+
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -179,8 +183,24 @@ clone_and_build() {
     trap 'cd "$WORKSPACE" && rm -rf "$WORKSPACE/build-aitum-multistream"' EXIT
 
     info "Cloning https://github.com/Aitum/obs-aitum-multistream.git..."
-    git clone --depth 1 -b main https://github.com/Aitum/obs-aitum-multistream.git
+    git clone https://github.com/Aitum/obs-aitum-multistream.git
     cd obs-aitum-multistream
+
+    if [ "$RELEASE_TYPE" = "stable" ]; then
+        info "Finding the latest stable release tag..."
+        git fetch --tags
+        local latest_tag
+        latest_tag=$(git describe --tags "$(git rev-list --tags --max-count=1)" 2>/dev/null || true)
+        if [ -n "$latest_tag" ]; then
+            info "Checking out latest stable tag: $latest_tag"
+            git checkout "$latest_tag"
+        else
+            warn "No release tags found. Defaulting to latest commit on main."
+        fi
+    else
+        info "Installing development variant (latest commit from main branch)..."
+    fi
+
 
     info "Patching CMake configuration for Arch Linux compatibility..."
     if [ -f cmake/common/helpers_common.cmake ]; then
@@ -189,6 +209,15 @@ clone_and_build() {
     else
         warn "cmake/common/helpers_common.cmake not found. Skipping patch."
     fi
+
+    if [ -f CMakeLists.txt ]; then
+        if ! grep -q "find_package(Qt6 COMPONENTS.*GuiPrivate" CMakeLists.txt; then
+            info "Patching CMakeLists.txt to find Qt6 GuiPrivate component..."
+            sed -i 's/target_link_libraries(${PROJECT_NAME} PRIVATE Qt::GuiPrivate)/find_package(Qt6 COMPONENTS GuiPrivate REQUIRED)\n       target_link_libraries(${PROJECT_NAME} PRIVATE Qt::GuiPrivate)/' CMakeLists.txt
+            success "Applied Qt::GuiPrivate patch."
+        fi
+    fi
+
 
     info "Creating custom toolchain.cmake..."
     cat > ../toolchain.cmake << 'EOF'

@@ -6,11 +6,22 @@ NOTE: Currently, this is only intended for Arch Linux. If you would like to make
 
 ## Quick Install
 
-To build and install the plugin automatically, execute the following command in your terminal:
+Select one of the following installation variants depending on your preference:
+
+### 1. Latest Stable Release (Recommended)
+This will clone the repository and build the latest tagged stable release:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/anthonymendez/linux-install-obs-aitum-multistream/main/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/anthonymendez/linux-install-obs-aitum-multistream/main/install-stable.sh)"
 ```
+
+### 2. Development Variant (Latest Commit)
+This will clone the repository and build the latest commit from the `main` branch:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/anthonymendez/linux-install-obs-aitum-multistream/main/install-dev.sh)"
+```
+
 
 ---
 
